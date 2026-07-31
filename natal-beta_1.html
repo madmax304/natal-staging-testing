@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Natal · Staging Build</title>
+<meta name="description" content="Test the Natal staging build on iOS and Android — a pre-production preview of what's coming, separate from the live app. Help us catch issues before they ship." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FBF4EE;
+    --cream-2:#F7EDE4;
+    --peach:#F4DECF;
+    --peach-soft:#FCEFE4;
+    --apricot:#EEAF74;
+    --apricot-2:#F0BD90;
+    --ink:#0E0C0A;
+    --ink-btn:#131110;
+    --muted:#6E6055;
+    --line:rgba(20,14,8,.10);
+    --line-soft:rgba(20,14,8,.07);
+    --radius:26px;
+    --maxw:940px;
+    --sans:'Outfit',ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    --serif:'DM Serif Display',Georgia,'Times New Roman',serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:var(--sans);
+    background:var(--cream);
+    color:var(--ink);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+
+  em.s{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:0}
+
+  /* ---------- nav ---------- */
+  nav{position:sticky;top:0;z-index:50;background:rgba(251,244,238,.8);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line-soft)}
+  .nav-in{max-width:var(--maxw);margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:1.15rem;letter-spacing:-.3px}
+  .mark{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font-weight:700;font-size:.9rem;color:var(--cream);background:var(--ink)}
+  .nav-stores{display:flex;gap:9px}
+  .store-mini{display:inline-flex;align-items:center;gap:8px;background:var(--ink-btn);color:#fff;text-decoration:none;font-family:var(--sans);font-weight:600;font-size:.82rem;padding:9px 15px;border-radius:9px;transition:transform .2s ease,box-shadow .2s ease;box-shadow:0 6px 16px -10px rgba(19,17,16,.55)}
+  .store-mini:hover{transform:translateY(-1px)}
+  .store-mini svg{width:17px;height:17px;fill:#fff;flex:none}
+
+  /* ---------- hero ---------- */
+  header{text-align:center;padding:66px 0 26px}
+  .pill{
+    display:inline-flex;align-items:center;gap:8px;font-size:.74rem;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;
+    color:#5a4a3c;background:var(--peach-soft);border:1px solid var(--line-soft);padding:7px 15px;border-radius:999px;
+  }
+  .dot{width:7px;height:7px;border-radius:50%;background:#3fae6f;box-shadow:0 0 0 0 rgba(63,174,111,.5);animation:pulse 2.2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(63,174,111,.5)}70%{box-shadow:0 0 0 9px rgba(63,174,111,0)}100%{box-shadow:0 0 0 0 rgba(63,174,111,0)}}
+  h1{font-size:clamp(2.7rem,7vw,4.4rem);line-height:1.02;font-weight:600;letter-spacing:-1.5px;margin:22px auto 18px;max-width:15ch}
+  h1 .s{font-size:1.06em;line-height:.9}
+  .lede{font-size:clamp(1.02rem,2.3vw,1.18rem);color:var(--muted);max-width:54ch;margin:0 auto 32px}
+
+  /* ---------- store buttons ---------- */
+  .stores{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:14px}
+  .store{
+    position:relative;display:flex;align-items:center;gap:13px;text-decoration:none;color:#fff;
+    min-width:228px;padding:14px 22px;border-radius:12px;background:var(--ink-btn);
+    transition:transform .22s ease,box-shadow .22s ease;box-shadow:0 10px 26px -14px rgba(19,17,16,.6);
+  }
+  .store:hover{transform:translateY(-3px);box-shadow:0 18px 38px -16px rgba(19,17,16,.65)}
+  .store svg{width:27px;height:27px;flex:none;fill:#fff}
+  .store .lbl{display:flex;flex-direction:column;line-height:1.18;text-align:left}
+  .store .lbl small{font-size:.7rem;color:rgba(255,255,255,.62);font-weight:400}
+  .store .lbl strong{font-size:1.02rem;font-weight:600;letter-spacing:.1px}
+  .rec{
+    position:absolute;top:-10px;right:14px;font-size:.6rem;font-weight:700;letter-spacing:.6px;text-transform:uppercase;
+    padding:3px 10px;border-radius:999px;color:var(--ink);background:var(--apricot);opacity:0;transform:translateY(4px);transition:.3s ease;
+  }
+  .store.is-rec .rec{opacity:1;transform:none}
+  .fine{font-size:.82rem;color:#94867a}
+
+  /* ---------- sections ---------- */
+  section{padding:26px 0}
+  h2{font-family:var(--sans);font-weight:700;text-transform:uppercase;letter-spacing:.2px;line-height:1.08;font-size:clamp(1.4rem,3.4vw,1.95rem);margin-bottom:10px}
+  h2 .s{text-transform:none;font-weight:400}
+  .center{text-align:center}
+  .sec-lede{color:var(--muted);max-width:60ch;margin:0 auto 24px}
+  .center .sec-lede{margin-left:auto;margin-right:auto}
+
+  .panel{background:linear-gradient(178deg,var(--apricot-2) 0%,var(--peach) 62%,var(--peach-soft) 100%);border-radius:var(--radius);padding:40px 30px}
+  .panel-soft{background:var(--peach-soft);border-radius:var(--radius);padding:34px 28px}
+  .card{background:#FFFDFB;border:1px solid var(--line-soft);border-radius:22px;padding:26px;box-shadow:0 18px 40px -30px rgba(60,40,20,.4)}
+  .grid{display:grid;gap:16px}
+  @media(min-width:720px){.grid.two{grid-template-columns:1fr 1fr}}
+
+  /* lists */
+  .list{list-style:none;display:grid;gap:15px}
+  .list li{display:flex;gap:13px;align-items:flex-start;color:var(--muted)}
+  .list li strong{color:var(--ink);font-weight:650}
+  .bullet{flex:none;width:9px;height:9px;border-radius:50%;background:var(--apricot);margin-top:9px}
+
+  /* steps */
+  .platform-head{display:flex;align-items:center;gap:11px;margin-bottom:18px;font-weight:700;font-size:1.05rem}
+  .platform-head svg{width:22px;height:22px;fill:var(--ink)}
+  .steps{counter-reset:step;display:grid;gap:15px}
+  .step{display:flex;gap:15px;align-items:flex-start}
+  .step .num{counter-increment:step;flex:none;width:32px;height:32px;border-radius:9px;display:grid;place-items:center;font-weight:700;font-size:.92rem;color:#fff;background:var(--ink)}
+  .step .num::before{content:counter(step)}
+  .step .txt strong{display:block;font-weight:650;margin-bottom:2px}
+  .step .txt span{color:var(--muted);font-size:.94rem}
+
+  /* feedback */
+  .tip h4{font-size:1.02rem;margin-bottom:8px;font-weight:700}
+  .tip p{color:var(--muted);font-size:.94rem}
+  .tip p+p{margin-top:9px}
+  .chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px;justify-content:center}
+  .chip{font-size:.82rem;color:#4a3d31;padding:8px 14px;border-radius:999px;border:1px solid var(--line-soft);background:var(--peach-soft)}
+
+  footer{border-top:1px solid var(--line-soft);margin-top:36px;padding:30px 0 46px;text-align:center;color:#94867a;font-size:.85rem}
+  footer .brand{justify-content:center;margin-bottom:10px;color:var(--ink)}
+
+  .reveal{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.dot{animation:none}}
+
+  @media(max-width:560px){
+    .store-mini .mini-lbl{display:none}
+    .store-mini{padding:9px 11px}
+    .nav-in{gap:8px}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <div class="brand"><span class="mark">N</span> Natal</div>
+    <div class="nav-stores">
+      <a class="store-mini" href="https://testflight.apple.com/join/gHsCMbGB" aria-label="Download for iOS via TestFlight">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.365 1.43c0 1.14-.42 2.2-1.13 3.02-.77.9-2.03 1.6-3.05 1.52-.13-1.1.42-2.27 1.09-3.01.77-.86 2.11-1.5 3.09-1.53zM20.9 17.02c-.55 1.27-.82 1.84-1.53 2.96-.98 1.56-2.37 3.5-4.08 3.51-1.53.01-1.92-1-4-1-2.07 0-2.5.98-4.03 1.01-1.71.03-3.01-1.68-4-3.24C-.6 16.6-.9 11.35 1.5 8.55c1.02-1.24 2.62-2.03 4.13-2.03 1.55 0 2.52 1.03 3.8 1.03 1.24 0 2-1.03 3.8-1.03 1.36 0 2.8.74 3.82 2.02-3.35 1.84-2.8 6.63.85 8.48z"/></svg>
+        <span class="mini-lbl">TestFlight</span>
+      </a>
+      <a class="store-mini" href="https://play.google.com/store/apps/details?id=com.natalllc.staging" aria-label="Download for Android via Google Play">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.6 1.4a1 1 0 0 0-.5.9v19.4a1 1 0 0 0 .5.9l11-11.5-11-9.7zm12.3 8.9L5.9 2.1l11.6 6.6-1.6 1.6zm0 3.4 1.6 1.6L5.9 21.9l10-8.2zm1.9-1.5 3.1-1.8c.7-.4.7-1.4 0-1.8l-3.1-1.8-1.9 1.9 1.9 1.9-1.9 1.5z"/></svg>
+        <span class="mini-lbl">Google Play</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <header>
+    <span class="pill"><span class="dot"></span> Staging Build</span>
+    <h1>Help us test <em class="s">Natal</em></h1>
+    <p class="lede">You're testing the Natal staging build — a pre-production preview of what's coming, separate from the app that's already live. Install it for your device, use it like you normally would, and flag anything that feels off. What you find helps us ship it right.</p>
+
+    <div class="stores" id="stores">
+      <a class="store" id="ios" href="https://testflight.apple.com/join/gHsCMbGB">
+        <span class="rec">Your device</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.365 1.43c0 1.14-.42 2.2-1.13 3.02-.77.9-2.03 1.6-3.05 1.52-.13-1.1.42-2.27 1.09-3.01.77-.86 2.11-1.5 3.09-1.53zM20.9 17.02c-.55 1.27-.82 1.84-1.53 2.96-.98 1.56-2.37 3.5-4.08 3.51-1.53.01-1.92-1-4-1-2.07 0-2.5.98-4.03 1.01-1.71.03-3.01-1.68-4-3.24C-.6 16.6-.9 11.35 1.5 8.55c1.02-1.24 2.62-2.03 4.13-2.03 1.55 0 2.52 1.03 3.8 1.03 1.24 0 2-1.03 3.8-1.03 1.36 0 2.8.74 3.82 2.02-3.35 1.84-2.8 6.63.85 8.48z"/></svg>
+        <span class="lbl"><small>Download for iOS via</small><strong>TestFlight</strong></span>
+      </a>
+      <a class="store" id="android" href="https://play.google.com/store/apps/details?id=com.natalllc.staging">
+        <span class="rec">Your device</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.6 1.4a1 1 0 0 0-.5.9v19.4a1 1 0 0 0 .5.9l11-11.5-11-9.7zm12.3 8.9L5.9 2.1l11.6 6.6-1.6 1.6zm0 3.4 1.6 1.6L5.9 21.9l10-8.2zm1.9-1.5 3.1-1.8c.7-.4.7-1.4 0-1.8l-3.1-1.8-1.9 1.9 1.9 1.9-1.9 1.5z"/></svg>
+        <span class="lbl"><small>Download for Android via</small><strong>Google Play</strong></span>
+      </a>
+    </div>
+    <p class="fine">Free to join · No commitment · Leave anytime from TestFlight or Google Play</p>
+  </header>
+
+  <section class="reveal">
+    <div class="panel-soft">
+      <h2 class="center">What you're <em class="s">testing</em></h2>
+      <p class="sec-lede center">This is Natal's staging build — the app you know, running ahead of production against a test environment. It's where we catch problems before they reach the live app. A few things to keep in mind:</p>
+      <ul class="list" style="max-width:640px;margin:0 auto">
+        <li><span class="bullet"></span><div><strong>It's not the live app.</strong> This is a separate, pre-production build. The everyday Natal on the App Store and Google Play keeps working exactly as usual.</div></li>
+        <li><span class="bullet"></span><div><strong>It runs on a test environment.</strong> Your staging account and data are separate from your real account and may be reset between updates, so treat it as a sandbox rather than your training log.</div></li>
+        <li><span class="bullet"></span><div><strong>Expect rough edges.</strong> Things are still in progress here — the occasional bug is exactly what you're helping us catch.</div></li>
+        <li><span class="bullet"></span><div><strong>Updates come often.</strong> You'll get frequent new builds — TestFlight and Google Play will prompt you when one's ready. Grab them so you're always on the latest.</div></li>
+        <li><span class="bullet"></span><div><strong>Keep it to yourself.</strong> This build isn't released, so avoid sharing screenshots or links outside the testing group.</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="get-started" class="reveal">
+    <h2 class="center">Getting <em class="s">started</em></h2>
+    <p class="sec-lede center">Pick your platform. It takes about two minutes.</p>
+    <div class="grid two">
+      <div class="card">
+        <div class="platform-head">
+          <svg viewBox="0 0 24 24"><path d="M16.365 1.43c0 1.14-.42 2.2-1.13 3.02-.77.9-2.03 1.6-3.05 1.52-.13-1.1.42-2.27 1.09-3.01.77-.86 2.11-1.5 3.09-1.53zM20.9 17.02c-.55 1.27-.82 1.84-1.53 2.96-.98 1.56-2.37 3.5-4.08 3.51-1.53.01-1.92-1-4-1-2.07 0-2.5.98-4.03 1.01-1.71.03-3.01-1.68-4-3.24C-.6 16.6-.9 11.35 1.5 8.55c1.02-1.24 2.62-2.03 4.13-2.03 1.55 0 2.52 1.03 3.8 1.03 1.24 0 2-1.03 3.8-1.03 1.36 0 2.8.74 3.82 2.02-3.35 1.84-2.8 6.63.85 8.48z"/></svg>
+          iPhone / iPad
+        </div>
+        <div class="steps">
+          <div class="step"><span class="num"></span><div class="txt"><strong>Install TestFlight</strong><span>Get Apple's free TestFlight app from the App Store — it's how Apple delivers pre-release builds.</span></div></div>
+          <div class="step"><span class="num"></span><div class="txt"><strong>Tap "TestFlight" above</strong><span>The button opens TestFlight and adds the Natal staging build. Tap Install (or Update) there.</span></div></div>
+          <div class="step"><span class="num"></span><div class="txt"><strong>Open Natal &amp; sign up</strong><span>Launch it and create a staging account — it's separate from your live one.</span></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="platform-head">
+          <svg viewBox="0 0 24 24"><path d="M3.6 1.4a1 1 0 0 0-.5.9v19.4a1 1 0 0 0 .5.9l11-11.5-11-9.7zm12.3 8.9L5.9 2.1l11.6 6.6-1.6 1.6zm0 3.4 1.6 1.6L5.9 21.9l10-8.2zm1.9-1.5 3.1-1.8c.7-.4.7-1.4 0-1.8l-3.1-1.8-1.9 1.9 1.9 1.9-1.9 1.5z"/></svg>
+          Android
+        </div>
+        <div class="steps">
+          <div class="step"><span class="num"></span><div class="txt"><strong>Tap "Google Play" above</strong><span>It opens the Natal staging listing on the Play Store, where you'll see you're a tester.</span></div></div>
+          <div class="step"><span class="num"></span><div class="txt"><strong>Install the app</strong><span>Tap Install. If the staging build isn't showing yet, give it a minute after joining and refresh.</span></div></div>
+          <div class="step"><span class="num"></span><div class="txt"><strong>Open Natal &amp; sign up</strong><span>Launch it and create a staging account — it's separate from your live one.</span></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="panel">
+      <h2 class="center">How to test <em class="s">well</em></h2>
+      <p class="sec-lede center" style="color:#5c4a39">The most useful thing you can do is use Natal like it's your real app. Beyond that, here's what helps us most:</p>
+      <div class="grid two" style="max-width:720px;margin:0 auto">
+        <ul class="list">
+          <li><span class="bullet" style="background:var(--ink)"></span><div><strong>Do real workouts.</strong> Start a program, work through the days, mark steps complete, skip when you'd skip, finish sessions end to end.</div></li>
+          <li><span class="bullet" style="background:var(--ink)"></span><div><strong>Test real conditions.</strong> Headphones, app backgrounded, screen locked mid-workout — that's where audio and playback issues hide.</div></li>
+        </ul>
+        <ul class="list">
+          <li><span class="bullet" style="background:var(--ink)"></span><div><strong>Push the edges.</strong> Weak Wi-Fi, airplane mode mid-session, switching apps, taking a call — see what breaks.</div></li>
+          <li><span class="bullet" style="background:var(--ink)"></span><div><strong>Capture the moment.</strong> When something's wrong, note what you did right before and grab a screenshot or recording.</div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <h2 class="center">How to share <em class="s">feedback</em></h2>
+    <p class="sec-lede center">All feedback goes through the app, so it reaches us with your device and build version already attached. The more specific, the better.</p>
+    <div class="grid two">
+      <div class="card tip">
+        <h4>Inside the Natal app</h4>
+        <p>Open the in-app feedback option (under your profile) and send us a note. It automatically includes your device, OS, and the exact staging build you're on.</p>
+        <p>This is the fastest way to reach us and the easiest for us to act on — it lands with all the context attached.</p>
+      </div>
+      <div class="card tip">
+        <h4>On iPhone, even quicker</h4>
+        <p>Take a screenshot while using the app and TestFlight will offer to send it as feedback with a note attached — no extra steps.</p>
+        <p>Great for anything visual: a layout that looks off, a button in the wrong place, a moment that didn't feel right.</p>
+      </div>
+    </div>
+    <div class="chips">
+      <span class="chip">What you expected</span>
+      <span class="chip">What happened</span>
+      <span class="chip">Steps to reproduce</span>
+      <span class="chip">Device &amp; OS version</span>
+      <span class="chip">Screenshot / recording</span>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="panel center">
+      <h2>Ready to <em class="s">jump in?</em></h2>
+      <p class="sec-lede" style="color:#5c4a39;margin:0 auto 22px">Grab the staging build for your device and start training. Thank you for helping us get Natal right.</p>
+      <div class="stores">
+        <a class="store" href="https://testflight.apple.com/join/gHsCMbGB">
+          <svg viewBox="0 0 24 24"><path d="M16.365 1.43c0 1.14-.42 2.2-1.13 3.02-.77.9-2.03 1.6-3.05 1.52-.13-1.1.42-2.27 1.09-3.01.77-.86 2.11-1.5 3.09-1.53zM20.9 17.02c-.55 1.27-.82 1.84-1.53 2.96-.98 1.56-2.37 3.5-4.08 3.51-1.53.01-1.92-1-4-1-2.07 0-2.5.98-4.03 1.01-1.71.03-3.01-1.68-4-3.24C-.6 16.6-.9 11.35 1.5 8.55c1.02-1.24 2.62-2.03 4.13-2.03 1.55 0 2.52 1.03 3.8 1.03 1.24 0 2-1.03 3.8-1.03 1.36 0 2.8.74 3.82 2.02-3.35 1.84-2.8 6.63.85 8.48z"/></svg>
+          <span class="lbl"><small>Download for iOS via</small><strong>TestFlight</strong></span>
+        </a>
+        <a class="store" href="https://play.google.com/store/apps/details?id=com.natalllc.staging">
+          <svg viewBox="0 0 24 24"><path d="M3.6 1.4a1 1 0 0 0-.5.9v19.4a1 1 0 0 0 .5.9l11-11.5-11-9.7zm12.3 8.9L5.9 2.1l11.6 6.6-1.6 1.6zm0 3.4 1.6 1.6L5.9 21.9l10-8.2zm1.9-1.5 3.1-1.8c.7-.4.7-1.4 0-1.8l-3.1-1.8-1.9 1.9 1.9 1.9-1.9 1.5z"/></svg>
+          <span class="lbl"><small>Download for Android via</small><strong>Google Play</strong></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="brand"><span class="mark">N</span> Natal</div>
+    <p>Natal Staging Build · Thanks for testing with us.</p>
+    <p style="margin-top:6px;opacity:.8">A pre-production build intended for invited testers only.</p>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var ua = navigator.userAgent || navigator.vendor || "";
+    var isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    var isAndroid = /android/i.test(ua);
+    var ios = document.getElementById('ios');
+    var android = document.getElementById('android');
+    var stores = document.getElementById('stores');
+    if(isIOS && ios){ ios.classList.add('is-rec'); }
+    else if(isAndroid && android){ android.classList.add('is-rec'); if(stores){ stores.insertBefore(android, ios); } }
+  })();
+  (function(){
+    var els = document.querySelectorAll('.reveal');
+    if(!('IntersectionObserver' in window)){ els.forEach(function(e){e.classList.add('in')}); return; }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+    },{threshold:.12});
+    els.forEach(function(e){ io.observe(e); });
+  })();
+</script>
+</body>
+</html>
